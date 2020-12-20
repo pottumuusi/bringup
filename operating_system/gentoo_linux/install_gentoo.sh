@@ -88,7 +88,7 @@ function maybe_mount_partitions() {
 		mkdir ${mountpoint_ram}
 	fi
 
-	if [ "TRUE" =! "$(is_mounted ${mountpoint_ram})" ] ; then
+	if [ "TRUE" != "$(is_mounted ${mountpoint_ram})" ] ; then
 		mount -t tmpfs none -o size=100 ${mountpoint_ram}
 	fi
 }
