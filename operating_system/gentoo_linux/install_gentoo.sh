@@ -43,7 +43,7 @@ function process_args() {
 	fi
 }
 
-function presetup() {
+function import_gentoo_gpg_key() {
 	if [ "TRUE" != "${DISABLED}" ] ; then
 		# Was not able to connect to sks-keyservers.net
 		gpg --keyserver hkps://hkps.pool.sks-keyservers.net --recv-keys 0xBB572E0E2D182910
@@ -83,6 +83,32 @@ function maybe_mount_partitions() {
 			mount ${home_partition_dev} ${mountpoint_home}
 		fi
 	fi
+
+	if [ ! -d "${mountpoint_ram}" ] ; then
+		mkdir ${mountpoint_ram}
+	fi
+
+	if [ "TRUE" =! "$(is_mounted ${mountpoint_ram})" ] ; then
+		mount -t tmpfs none -o size=100 ${mountpoint_ram}
+	fi
+}
+
+function store_root_password_to_ram() {
+	set +x
+	echo ""
+	read -s -p "Please enter root password to set at the end of install: " cached_root_password
+	echo ""
+	read -s -p "Please re-enter root password to set at the end of install: " cached_root_password_verification
+
+	if [ "${cached_root_password}" != "${cached_root_password_verification}" ] ; then
+		error_exit "Entered passwords do not match"
+	fi
+
+	set -x
+}
+
+function store_root_password_to_file_in_ram() {
+	echo "${cached_root_password}" > ${root_password_file_in_ram}
 }
 
 function maybe_mount_pseudofilesystems() {
@@ -190,6 +216,10 @@ function setup_portage() {
 
 	eselect profile set default/linux/amd64/17.1
 
+	emerge sys-auth/elogind --autounmask-write \
+		|| true
+	etc-update --automode -3 -q # Merge required USE flag changes
+
 	emerge --verbose --update --deep --newuse @world
 
 	# TODO Check if necessary to update make.conf. Was it changed during
@@ -220,6 +250,7 @@ function setup_kernel() {
 	cp ${gentoo_config}/.config ${kernel_sources_dir}
 
 	pushd ${kernel_sources_dir}
+	make olddefconfig
 	make
 	make modules_install
 	make install
@@ -228,7 +259,7 @@ function setup_kernel() {
 	emerge --autounmask-write sys-kernel/linux-firmware \
 		|| true
 	# TODO check that configuration updates are actually license updates.
-	etc-update --automode -3 # Merge license changes
+	etc-update --automode -3 -q # Merge license changes
 	emerge sys-kernel/linux-firmware
 }
 
@@ -249,7 +280,7 @@ function setup_lvm() {
 	emerge --autounmask-write sys-kernel/genkernel \
 		|| true
 	# TODO check that configuration updates are actually license updates.
-	etc-update --automode -3 # Merge license changes
+	etc-update --automode -3 -q # Merge license changes
 	emerge sys-kernel/genkernel
 
 	# TODO configuration
@@ -302,7 +333,8 @@ function setup_new_system() {
 	echo "127.0.0.1	${my_hostname}	${my_hostname}	localhost" >> /etc/hosts
 
 	print_header "SETTING ROOT PASSWORD"
-	passwd
+	cached_root_password="$(cat ${chroot_root_password_file_in_ram})"
+	echo -e "${cached_root_password}\n${cached_root_password}" | passwd
 
 	# TODO modify and copy to config dir:
 	# /etc/rc.conf
@@ -339,25 +371,38 @@ function setup_bootloader() {
 }
 
 function setup_packages() {
-	emerge x11-base/xorg-x11 \
+	emerge --autounmask-write x11-base/xorg-server \
 		|| true
-	emerge --autounmask-write x11-base/xorg-server
 	# TODO check that configuration updates are actually license updates.
-	etc-update --automode -3 # Merge license changes
+	etc-update --automode -3 -q # Merge USE flag and license changes
 	emerge x11-base/xorg-server
 	emerge x11-terms/st \
 		x11-misc/dmenu \
 		x11-wm/dwm \
 		app-editors/vim \
 		dev-vcs/git \
+		app-admin/sudo \
 		app-misc/tmux
+}
+
+function setup_accounts() {
+	local -r username="testuser"
+	groupadd wheel
+	useradd -m -G wheel ${username}
 }
 
 function install_pre_chroot() {
 	print_header "INSTALL_PRE-CHROOT"
-	presetup
+
+	if [ "TRUE" = "${cfg_confirm_config}" ] ; then
+		dump_config_and_wait_for_enter
+	fi
+
+	store_root_password_to_ram
+	import_gentoo_gpg_key
 	test "$(should_setup_partitions)" && setup_partitions
 	maybe_mount_partitions
+	store_root_password_to_file_in_ram
 	setup_date_and_time
 	setup_stage_tarball
 	setup_portage_configuration
@@ -389,14 +434,15 @@ function install_post_chroot() {
 	test "$(should_setup_new_system)" && setup_new_system
 	test "$(should_setup_bootloader)" && setup_bootloader
 	test "$(should_setup_packages)" && setup_packages
+	setup_accounts
+
+	if [ "TRUE" = "${cfg_shutdown_when_done}" ] ; then
+		shutdown -h now
+	fi
 }
 
 function main() {
 	process_args "$@"
-
-	if [ "TRUE" = "${cfg_confirm_config}" ] ; then
-		dump_config_and_wait_for_enter
-	fi
 
 	if [ "TRUE" = "${is_pre_chroot_install}" ] ; then
 		install_pre_chroot

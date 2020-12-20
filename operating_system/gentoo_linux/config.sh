@@ -17,6 +17,7 @@ readonly cfg_write_partition_using_sfdisk="TRUE"
 readonly cfg_write_partition_using_sgdisk="FALSE"
 readonly cfg_setup_home_partition="FALSE"
 readonly cfg_confirm_config="TRUE"
+readonly cfg_shutdown_when_done="TRUE"
 
 # Will create grub config regardless of this option
 readonly cfg_install_grub_to_disk="TRUE"
@@ -24,6 +25,8 @@ readonly cfg_install_grub_to_disk="TRUE"
 readonly main_block_device="/dev/sdb"
 readonly mountpoint_root="/mnt/gentoo"
 readonly mountpoint_home="${mountpoint_root}/home"
+readonly mountpoint_ram="${mountpoint_root}/mnt_ram"
+readonly chroot_mountpoint_ram="/mnt_ram"
 
 # Parse stage3 tar name from webpage.
 readonly frozen_stage3_release_dir="https://mirror.netcologne.de/gentoo/releases/amd64/autobuilds/current-stage3-amd64/"
@@ -71,7 +74,7 @@ unset temp_boot_partition_dev
 readonly saved_partition_table="${gentoo_config}/saved_partition_table"
 readonly gpt_partition_backup_file="sgdisk-sda.bin"
 
-readonly root_size="14G"
+readonly root_size="14G" # root size when using LVM, variable name is misleading
 readonly home_size="9995M"
 
 readonly opt_pre_chroot="--pre-chroot"
@@ -82,17 +85,20 @@ readonly opt_full_install="--full"
 readonly opt_post_chroot="--post-chroot"
 
 readonly kernel_sources_dir="/usr/src/linux"
+readonly root_password_file_in_ram="${mountpoint_ram}/rootpass.txt"
+readonly chroot_root_password_file_in_ram="${chroot_mountpoint_ram}/rootpass.txt"
 
 readonly new_hostname="my_hostname"
-readonly inet_if="enp0s25" # TODO read this from a command, instead of hardcoding
+readonly inet_if="enp1s0" # TODO read this from a command, instead of hardcoding
 # readonly inet_if="wlp3s0" # TODO read this from a command, instead of hardcoding
+
+cached_root_password=""
 
 function dump_config() {
 	set +x
 
 	echo ""
 	echo "cfg_should_setup_partitions=${cfg_should_setup_partitions}"
-
 	echo "cfg_should_setup_portage=${cfg_should_setup_portage}"
 	echo "cfg_should_setup_timezone=${cfg_should_setup_timezone}"
 	echo "cfg_should_setup_locale=${cfg_should_setup_locale}"
@@ -101,15 +107,27 @@ function dump_config() {
 	echo "cfg_should_setup_new_system=${cfg_should_setup_new_system}"
 	echo "cfg_should_setup_bootloader=${cfg_should_setup_bootloader}"
 	echo "cfg_should_setup_packages=${cfg_should_setup_packages}"
-
+	echo "cfg_install_grub_to_disk=${cfg_install_grub_to_disk}"
 	echo "cfg_set_efi64_grub_platform=${cfg_set_efi64_grub_platform}"
 	echo "cfg_write_partition_using_sfdisk=${cfg_write_partition_using_sfdisk}"
 	echo "cfg_write_partition_using_sgdisk=${cfg_write_partition_using_sgdisk}"
+	echo "cfg_setup_home_partition=${cfg_setup_home_partition}"
+	echo "cfg_confirm_config=${cfg_confirm_config}"
+	echo "cfg_shutdown_when_done=${cfg_shutdown_when_done}"
+	echo ""
 	echo "root_partition_dev=${root_partition_dev}"
 	echo "home_partition_dev=${home_partition_dev}"
 	echo "swap_partition_dev=${swap_partition_dev}"
 	echo "boot_partition_dev=${boot_partition_dev}"
+	if [ "TRUE" = "${cfg_should_setup_lvm}" ] ; then
+		echo lvm_partition_dev="${lvm_partition_dev}"
+	fi
+	echo "main_block_device=${main_block_device}"
+	echo "mountpoint_root=${mountpoint_root}"
+	echo "mountpoint_home=${mountpoint_home}"
+	echo "mountpoint_ram=${mountpoint_ram}"
 	echo "stage3_tar=${stage3_tar}"
+	echo ""
 
 	set -x
 }
