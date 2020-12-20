@@ -78,8 +78,10 @@ function maybe_mount_partitions() {
 		mkdir ${mountpoint_home}
 	fi
 
-	if [ "TRUE" != "$(is_mounted "${mountpoint_home}")" ] ; then
-		mount ${home_partition_dev} ${mountpoint_home}
+	if [ "TRUE" = "${cfg_setup_home_partition}" ] ; then
+		if [ "TRUE" != "$(is_mounted "${mountpoint_home}")" ] ; then
+			mount ${home_partition_dev} ${mountpoint_home}
+		fi
 	fi
 }
 
@@ -133,12 +135,16 @@ function setup_partitions() {
 		vgcreate ${volgroup_name} ${lvm_partition_dev}
 
 		lvcreate --yes --type linear -L ${root_size} -n ${lv_name_root} ${volgroup_name}
-		lvcreate --yes --type linear -L ${home_size} -n ${lv_name_home} ${volgroup_name}
+		if [ "TRUE" = "${cfg_setup_home_partition}" ] ; then
+			lvcreate --yes --type linear -L ${home_size} -n ${lv_name_home} ${volgroup_name}
+		fi
 	fi
 
 	mkfs.ext2 -F -F ${boot_partition_dev}
 	mkfs.ext4 -F -F ${root_partition_dev}
-	mkfs.ext4 -F -F ${home_partition_dev}
+	if [ "TRUE" = "${cfg_setup_home_partition}" ] ; then
+		mkfs.ext4 -F -F ${home_partition_dev}
+	fi
 }
 
 function setup_stage_tarball() {
@@ -335,7 +341,10 @@ function setup_bootloader() {
 function setup_packages() {
 	emerge x11-base/xorg-x11 \
 		|| true
-	emerge --autounmask-write x11-base/xorg-x11
+	emerge --autounmask-write x11-base/xorg-server
+	# TODO check that configuration updates are actually license updates.
+	etc-update --automode -3 # Merge license changes
+	emerge x11-base/xorg-server
 	emerge x11-terms/st \
 		x11-misc/dmenu \
 		x11-wm/dwm \
@@ -384,6 +393,10 @@ function install_post_chroot() {
 
 function main() {
 	process_args "$@"
+
+	if [ "TRUE" = "${cfg_confirm_config}" ] ; then
+		dump_config_and_wait_for_enter
+	fi
 
 	if [ "TRUE" = "${is_pre_chroot_install}" ] ; then
 		install_pre_chroot

@@ -1,7 +1,9 @@
 label: dos
-label-id: 0x25a3d9ff
+label-id: 0x9b89ec04
+device: /dev/sdb
 unit: sectors
 
-start=        2048, size=     4194304, type=83, bootable
-start=     4196352, size=     8388608, type=82
-start=    12584960, size=    50329600, type=8e
+/dev/sdb1 : start=        2048, size=        4096, type=4
+/dev/sdb2 : start=        6144, size=     4194304, type=83
+/dev/sdb3 : start=     4200448, size=    33554432, type=82
+/dev/sdb4 : start=    37754880, size=   450642288, type=83
