@@ -391,6 +391,11 @@ function setup_accounts() {
 	useradd -m -G wheel ${username}
 }
 
+function setup_remote_access() {
+	# TODO enable when have implemented taking stored sshd config into use
+	# rc-update add sshd default
+}
+
 function install_pre_chroot() {
 	print_header "INSTALL_PRE-CHROOT"
 
@@ -435,6 +440,7 @@ function install_post_chroot() {
 	test "$(should_setup_bootloader)" && setup_bootloader
 	test "$(should_setup_packages)" && setup_packages
 	setup_accounts
+	setup_remote_access
 
 	if [ "TRUE" = "${cfg_shutdown_when_done}" ] ; then
 		shutdown -h now
