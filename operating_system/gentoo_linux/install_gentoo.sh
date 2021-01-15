@@ -394,6 +394,7 @@ function setup_accounts() {
 function setup_remote_access() {
 	# TODO enable when have implemented taking stored sshd config into use
 	# rc-update add sshd default
+	echo "setup_remote_access: Not yet implemented"
 }
 
 function install_pre_chroot() {
