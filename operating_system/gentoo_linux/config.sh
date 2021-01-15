@@ -22,7 +22,7 @@ readonly cfg_shutdown_when_done="TRUE"
 # Will create grub config regardless of this option
 readonly cfg_install_grub_to_disk="TRUE"
 
-readonly main_block_device="/dev/sdb"
+readonly main_block_device="/dev/sda"
 readonly mountpoint_root="/mnt/gentoo"
 readonly mountpoint_home="${mountpoint_root}/home"
 readonly mountpoint_ram="${mountpoint_root}/mnt_ram"
