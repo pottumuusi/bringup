@@ -27,7 +27,7 @@ verify_network() {
 
     echo "Verifying network connectivity."
 
-    ip link | grep "enp[[:digit:]]s[[:digit:]]" || latest_exit="${?}"
+    ip link | grep "enp[[:digit:]]s[[:digit:]]" ; latest_exit="${?}"
     if [ "0" != "${latest_exit}" ] ; then
         error_exit "Failed to detect physical ethernet device."
     fi
