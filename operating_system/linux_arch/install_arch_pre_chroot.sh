@@ -47,8 +47,6 @@ verify_system_clock() {
 }
 
 main() {
-    echo "Hello world!"
-
     verify_boot_mode
 
     verify_network
