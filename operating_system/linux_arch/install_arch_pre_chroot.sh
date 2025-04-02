@@ -10,6 +10,8 @@ error_exit() {
 }
 
 verify_boot_mode() {
+    echo "Verifying boot mode."
+
     if [ ! -f /sys/firmware/efi/fw_platform_size ] ; then
         echo "Detected to boot in BIOS mode."
         return
@@ -22,6 +24,8 @@ verify_boot_mode() {
 
 verify_network() {
     local latest_exit=''
+
+    echo "Verifying network connectivity."
 
     ip link | grep "enp[[:digit:]]s[[:digit:]]" || latest_exit="${?}"
     if [ "0" != "${latest_exit}" ] ; then
