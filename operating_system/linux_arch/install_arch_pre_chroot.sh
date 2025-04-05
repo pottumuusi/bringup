@@ -4,6 +4,20 @@ set -e
 
 cd $(dirname $0)
 
+# TODO
+# * [ ] disable systemd timer fstrim.timer
+#     * TRIM causes emptying SSD blocks, so the random data should be replaced
+#       with zeroes. Random data is indistinguishable from encrypted drive data.
+# * How to verify that secure erase left the device in erased state?
+#     * `hdparm --security-erase NULL /dev/sda`
+# * How to verify that the device is full of random data? Proposal:
+#     1. Secure erase the drive
+#     2. Verify device is full of zeroes
+#     3. Wipe with random data
+#     4. Verify device is not full of zeroes
+#     * This proposal could be written into a script.
+readonly WIPE_BEFORE_ENCRYPTION=''
+
 error_exit() {
     echo "${1}"
     exit 1
