@@ -16,6 +16,8 @@ cd $(dirname $0)
 #     3. Wipe with random data
 #     4. Verify device is not full of zeroes
 #     * This proposal could be written into a script.
+#     * Reading start of block device:
+#         `dd bs=256 count=1 if/dev/sda of=start_of_sda.bin`
 readonly WIPE_BEFORE_ENCRYPTION=''
 
 error_exit() {
