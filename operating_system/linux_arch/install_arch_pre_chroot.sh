@@ -188,7 +188,7 @@ main() {
 
     verify_system_clock
 
-    prepare_os_drive
+    prepare_os_block_device
 
     popd # ${WORKAREA_DIRECTORY}
 }
