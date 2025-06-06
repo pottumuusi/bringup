@@ -175,6 +175,12 @@ prepare_os_block_device() {
     wipe_os_block_device
 }
 
+partition_os_block_device() {
+    # TODO do not write the 10M partitions. They are from sfdisk man page and
+    # their purpose is unknown.
+    # echo -e 'size=10M, type=L\n size=10M, type=L\n size=+, type=L\n' | sgdisk ${OS_BLOCK_DEVICE}
+}
+
 main() {
     if [ ! -d "${WORKAREA_DIRECTORY}" ] ; then
         mkdir ${WORKAREA_DIRECTORY}
@@ -189,6 +195,8 @@ main() {
     verify_system_clock
 
     prepare_os_block_device
+
+    partition_os_block_device
 
     popd # ${WORKAREA_DIRECTORY}
 }
