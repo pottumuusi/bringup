@@ -4,15 +4,13 @@ set -e
 
 cd $(dirname $0)
 
-error_exit() {
-    echo "${1}"
-    exit 1
-}
-
 main() {
     echo "Provisioning $(hostname)"
 
+    source ./util.sh || error_exit "Failed to load util functions."
     source ./config.sh || error_exit "Failed to load config."
+
+    assert_variable "VENV_DIRECTORY"
 
     echo "Installing Ansible"
     ./install_ansible.sh || error_exit "Failed to install Ansible"

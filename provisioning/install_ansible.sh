@@ -4,11 +4,6 @@ set -e
 
 cd $(dirname $0)
 
-error_exit() {
-    echo "${1}"
-    exit 1
-}
-
 debian_install_python_virtual_environment() {
     echo "Installing Python virtual environment package on Debian"
 
@@ -28,13 +23,16 @@ install_python_virtual_environment() {
         return
     fi
 
-    error_exit "Unsupported Unix-like distribution: ${distro_name}"
+    error_exit "Unsupported Linux distribution: ${distro_name}"
 }
 
 main() {
     local -r ansible_core_version="2.18.6"
 
+    source ./util.sh || error_exit "Failed to load util functions."
     source ./config.sh || error_exit "Failed to load config."
+
+    assert_variable "VENV_DIRECTORY"
 
     install_python_virtual_environment
 
