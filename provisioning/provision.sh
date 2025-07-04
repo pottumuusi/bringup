@@ -7,6 +7,11 @@ cd $(dirname $0)
 readonly PHASE_INSTALL_ANSIBLE="true"
 
 main() {
+    local -r distribution_name="$(get_distribution_name)"
+
+    # Operating system that provides the runtime for provisioning.
+    local hosting_operating_system=''
+
     echo "Provisioning $(hostname)"
 
     source ./util.sh || error_exit "Failed to load util functions."
@@ -19,13 +24,20 @@ main() {
         ./install_ansible.sh || error_exit "Failed to install Ansible"
     fi
 
+    if [ "${DISTRIBUTION_NAME_DEBIAN}" == "${distribution_name}" ] ; then
+        hosting_operating_system=${OPERATING_SYSTEM_DEBIAN}
+    else
+        error_exit "Unsupported operating system: ${distribution_name}"
+    fi
+
     source ${VENV_DIRECTORY}/bin/activate \
         || error_exit "Failed to activate Python virtual environment."
 
-    ansible-playbook                                  \
-        ./playbooks/provision_debian_desktop_host.yml \
-        --connection=local                            \
-        --verbose                                     \
+    ansible-playbook                                                        \
+        ./playbooks/provision_debian_desktop_host.yml                       \
+        --connection=local                                                  \
+        --verbose                                                           \
+        --extra-vars "hosting_operating_system=${hosting_operating_system}" \
         --ask-become-pass
 
     deactivate \

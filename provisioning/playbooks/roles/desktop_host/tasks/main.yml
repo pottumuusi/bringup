@@ -1,0 +1,3 @@
+- name: Import Debian host desktop tasks
+  import_tasks: debian.yml
+  when: {{ bringup_operating_system_name }} == 'linux_debian'

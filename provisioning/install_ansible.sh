@@ -16,9 +16,7 @@ debian_install_python_virtual_environment() {
 }
 
 install_python_virtual_environment() {
-    local -r distro_name="$(grep '^NAME=' /etc/os-release | cut -d = -f 2)"
-
-    if [ "\"Debian GNU/Linux\"" == "${distro_name}" ] ; then
+    if [ "${DISTRIBUTION_NAME_DEBIAN}" == "$(get_distribution_name)" ] ; then
         debian_install_python_virtual_environment
         return
     fi

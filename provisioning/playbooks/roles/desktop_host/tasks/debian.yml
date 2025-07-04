@@ -1,0 +1,3 @@
+- name: Import role intent announcement tasks
+  ansible.builtin.import_tasks: announce_role_intent.yml
+
