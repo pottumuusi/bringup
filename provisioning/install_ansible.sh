@@ -25,10 +25,10 @@ install_python_virtual_environment() {
 }
 
 main() {
-    local -r ansible_core_version="2.18.6"
-
     source ./util.sh || error_exit "Failed to load util functions."
     source ./config.sh || error_exit "Failed to load config."
+
+    local -r ansible_core_version="2.18.6"
 
     assert_variable "VENV_DIRECTORY"
 

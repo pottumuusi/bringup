@@ -7,15 +7,15 @@ cd $(dirname $0)
 readonly PHASE_INSTALL_ANSIBLE="true"
 
 main() {
+    source ./util.sh || error_exit "Failed to load util functions."
+    source ./config.sh || error_exit "Failed to load config."
+
     local -r distribution_name="$(get_distribution_name)"
 
     # Operating system that provides the runtime for provisioning.
     local hosting_operating_system=''
 
     echo "Provisioning $(hostname)"
-
-    source ./util.sh || error_exit "Failed to load util functions."
-    source ./config.sh || error_exit "Failed to load config."
 
     assert_variable "VENV_DIRECTORY"
 
@@ -34,9 +34,10 @@ main() {
         || error_exit "Failed to activate Python virtual environment."
 
     ansible-playbook                                                        \
-        ./playbooks/provision_debian_desktop_host.yml                       \
+        ./playbooks/provision_desktop_host.yml                              \
         --connection=local                                                  \
         --verbose                                                           \
+        --diff                                                              \
         --extra-vars "hosting_operating_system=${hosting_operating_system}" \
         --ask-become-pass
 
