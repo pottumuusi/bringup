@@ -8,10 +8,10 @@ debian_install_python_virtual_environment() {
     echo "Installing Python virtual environment package on Debian"
 
     sudo apt update || error_exit "[!] Failed to apt update"
-    sudo apt upgrade || error_exit "[!] Failed to apt upgrade"
-    sudo apt autoremove || error_exit "[!] Failed to apt autoremove"
+    sudo apt --yes upgrade || error_exit "[!] Failed to apt upgrade"
+    sudo apt --yes autoremove || error_exit "[!] Failed to apt autoremove"
 
-    sudo apt install python3.11-venv \
+    sudo apt --yes install python3.11-venv \
         || error_exit "[!] Failed to install python3.11-venv"
 }
 
