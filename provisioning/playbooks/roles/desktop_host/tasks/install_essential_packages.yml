@@ -24,8 +24,11 @@
   ansible.builtin.apt:
     pkg:
       - tmux
+      - vim
+      - gedit
       - keepassxc
       - rsync
+      - remmina
       - lsb-release
-      # TODO provide remaining essential packages
+      - fceux
   become: true
