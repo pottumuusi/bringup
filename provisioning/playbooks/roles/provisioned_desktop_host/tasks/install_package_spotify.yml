@@ -1,6 +1,48 @@
 # Install instructions can be found from: https://wiki.debian.org/spotify
 
-- name: Announce to be not yet implemented
-  debug:
-    msg: Spotify package installation is not yet implemented
+- name: Create a directory for code repositories
+  ansible.builtin.file:
+    path: ansible_downloads
+    state: directory
+    mode: '0755'
+
+- name: Insert backports apt source
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list.d/spotify.list
+    line: "deb [signed-by=/etc/apt/keyrings/spotify.gpg] https://repository.spotify.com stable non-free"
+    create: yes
+  become: true
+
+- name: Download Spotify repository signing key
+  ansible.builtin.uri:
+    url: "https://download.spotify.com/debian/{{ file_spotify_public_key }}"
+    dest: ansible_downloads
+
+- name: Unpack input from OpenPGP ASCII armor
+  ansible.builtin.shell: |
+    gpg                                      \
+      --dearmor                              \
+      --output ansible_downloads/spotify.gpg \
+      ./ansible_downloads/{{ file_spotify_public_key }}
+  ignore_errors: false
+
+- name: Deploy Spotify repository signing key
+  ansible.builtin.copy:
+    src: ansible_downloads/spotify.gpg
+    dest: /etc/apt/keyrings/spotify.gpg
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Update package repository cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install Spotify package
+  ansible.builtin.apt:
+    pkg:
+      - spotify-client
+  become: true
 
