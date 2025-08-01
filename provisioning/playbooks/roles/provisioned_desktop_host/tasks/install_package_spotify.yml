@@ -8,7 +8,7 @@
 
 - name: Insert backports apt source
   ansible.builtin.lineinfile:
-    path: /etc/apt/sources.list.d/spotify.list
+    path: "{{ file_apt_source_spotify }}"
     line: "deb [signed-by=/etc/apt/keyrings/spotify.gpg] https://repository.spotify.com stable non-free"
     create: yes
   become: true

@@ -5,7 +5,7 @@
 
 - name: Insert backports apt source
   ansible.builtin.lineinfile:
-    path: /etc/apt/sources.list.d/backports.list
+    path: "{{ file_apt_source_backports }}"
     line: "deb http://deb.debian.org/debian {{ distribution_codename.stdout }}-backports main contrib"
     create: yes
   become: true
@@ -18,14 +18,14 @@
 
 - name: Create fasttrack apt sources file
   ansible.builtin.file:
-    path: /etc/apt/sources.list.d/fasttrack.list
+    path: "{{ file_apt_source_fasttrack }}"
     state: touch
     mode: '0644'
   become: true
 
 - name: Insert fasttrack apt sources
   ansible.builtin.blockinfile:
-    path: /etc/apt/sources.list.d/fasttrack.list
+    path: "{{ file_apt_source_fasttrack }}"
     block: |
       deb http://fasttrack.debian.net/debian-fasttrack/ {{ distribution_codename.stdout }}-fasttrack main contrib
       deb http://fasttrack.debian.net/debian-fasttrack/ {{ distribution_codename.stdout }}-backports-staging main contrib

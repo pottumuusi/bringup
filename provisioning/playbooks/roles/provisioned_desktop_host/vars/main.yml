@@ -1,3 +1,6 @@
 ---
 
 file_spotify_public_key: pubkey_C85668DF69375001.gpg
+file_apt_source_spotify: /etc/apt/sources.list.d/spotify.list
+file_apt_source_backports: /etc/apt/sources.list.d/backports.list
+file_apt_source_fasttrack: /etc/apt/sources.list.d/fasttrack.list
