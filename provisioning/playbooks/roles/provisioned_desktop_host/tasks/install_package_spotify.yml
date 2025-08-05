@@ -1,12 +1,12 @@
 # Install instructions can be found from: https://wiki.debian.org/spotify
 
-- name: Create a directory for code repositories
+- name: Create a directory for downloads initiated by Ansible
   ansible.builtin.file:
     path: ansible_downloads
     state: directory
     mode: '0755'
 
-- name: Insert backports apt source
+- name: Insert spotify apt source
   ansible.builtin.lineinfile:
     path: "{{ file_apt_source_spotify }}"
     line: "deb [signed-by=/etc/apt/keyrings/spotify.gpg] https://repository.spotify.com stable non-free"
