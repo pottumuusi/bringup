@@ -1,6 +1,8 @@
 - name: Import role intent announcement tasks
   ansible.builtin.import_tasks: announce_role_intent.yml
 
+# TODO ensure cdrom is commented out in /etc/apt/sources.list
+
 - name: Import tasks for installing essential packages
   ansible.builtin.import_tasks: install_essential_packages.yml
 
