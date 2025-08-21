@@ -1,0 +1,4 @@
+- name: Register distribution codename
+  ansible.builtin.shell: lsb_release -cs
+  register: distribution_codename
+  ignore_errors: false

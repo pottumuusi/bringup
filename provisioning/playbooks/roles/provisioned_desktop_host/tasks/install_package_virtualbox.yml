@@ -1,8 +1,3 @@
-- name: Register distribution codename
-  ansible.builtin.shell: lsb_release -cs
-  register: distribution_codename
-  ignore_errors: false
-
 - name: Insert backports apt source
   ansible.builtin.lineinfile:
     path: "{{ file_apt_source_backports }}"
