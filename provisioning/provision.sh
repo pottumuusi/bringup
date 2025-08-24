@@ -4,7 +4,20 @@ set -e
 
 cd $(dirname $0)
 
+readonly PHASE_SETUP_SUDO="true"
 readonly PHASE_INSTALL_ANSIBLE="true"
+
+setup_sudo_permissions() {
+    echo "Setting up sudo permissions for ${USER}."
+
+    if $(groups | grep -q 'sudo') ; then
+        echo "Permissions already present, skipping."
+        return
+    fi
+
+    usermod -aG sudo ${USER}
+    # TODO print and logout
+}
 
 main() {
     source ./util.sh || error_exit "Failed to load util functions."
@@ -18,6 +31,10 @@ main() {
     echo "Provisioning $(hostname)"
 
     assert_variable "VENV_DIRECTORY"
+
+    if [ "true" == "${PHASE_SETUP_SUDO}" ] ; then
+        setup_sudo_permissions
+    fi
 
     if [ "true" == "${PHASE_INSTALL_ANSIBLE}" ] ; then
         echo "Installing Ansible"
