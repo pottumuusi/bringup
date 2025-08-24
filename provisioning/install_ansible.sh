@@ -11,8 +11,8 @@ debian_install_python_virtual_environment() {
     sudo apt --yes upgrade || error_exit "[!] Failed to apt upgrade"
     sudo apt --yes autoremove || error_exit "[!] Failed to apt autoremove"
 
-    sudo apt --yes install python3.11-venv \
-        || error_exit "[!] Failed to install python3.11-venv"
+    sudo apt --yes install python3.13-venv \
+        || error_exit "[!] Failed to install python3.13-venv"
 }
 
 install_python_virtual_environment() {
