@@ -1,6 +1,40 @@
-# Install instructions can be found from: https://wiki.debian.org/Steam
+# TODO For AMD Radeon HD 7770, experimental AMDGPU support can be enabled:
+# https://wiki.debian.org/AtiHowTo#AMDGPU.2FVulkan_on_older_cards
 
-- name: Announce to be not yet implemented
-  debug:
-    msg: Steam package installation is not yet implemented
+- name: Add support for installing 32-bit packages
+  ansible.builtin.shell:
+    cmd: dpkg --add-architecture i386
+  become: true
+
+- name: Update package repository cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install 32-bit graphics libraries
+  ansible.builtin.apt:
+    pkg:
+      - libglx-mesa0:i386
+      - mesa-vulkan-drivers:i386
+      - libgl1-mesa-dri:i386
+  become: true
+
+- name: Insert contrib to primary apt source
+  ansible.builtin.replace:
+    path: /etc/apt/sources.list
+    regexp: '(deb http://deb.debian.org/debian/ trixie main) (non-free-firmware)'
+    replace: '\1 contrib \2'
+  become: true
+
+- name: Update package repository cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install steam-installer and mesa-vulkan-drivers
+  ansible.builtin.apt:
+    pkg:
+      - steam-installer
+      - mesa-vulkan-drivers
+  become: true
 
