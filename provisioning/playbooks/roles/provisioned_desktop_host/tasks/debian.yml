@@ -2,6 +2,7 @@
   ansible.builtin.import_tasks: announce_role_intent.yml
 
 # TODO ensure cdrom is commented out in /etc/apt/sources.list
+# NOTE in Debian 13 the cdrom row is already commented out after install
 
 - name: Import tasks for installing essential packages
   ansible.builtin.import_tasks: install_essential_packages.yml
