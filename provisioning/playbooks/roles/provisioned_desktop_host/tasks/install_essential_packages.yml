@@ -32,4 +32,6 @@
       - remmina
       - lsb-release
       - fceux
+      - ncdu
+      - cowsay
   become: true
