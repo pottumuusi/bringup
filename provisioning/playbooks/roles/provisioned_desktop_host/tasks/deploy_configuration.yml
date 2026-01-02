@@ -33,3 +33,10 @@
 
 - name: Set git configuration email
   ansible.builtin.shell: git config --global user.email "bddubbb@protonmail.com"
+
+- name: Customize .bashrc
+  ansible.builtin.blockinfile:
+    path: "{{ lookup('env','HOME') }}/.bashrc"
+    block: |
+      set -o vi
+      export EDITOR=vim
