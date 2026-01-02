@@ -1,5 +1,9 @@
 # TODO update so that the package gets installed from:
 # https://www.virtualbox.org/wiki/Linux_Downloads
+# ```
+# sudo dpkg -i ./virtualbox-7.2_7.2.4-170995~Debian~trixie_amd64.deb
+# sudo apt install --fix-broken
+# ```
 
 - name: Insert backports apt source
   ansible.builtin.lineinfile:
