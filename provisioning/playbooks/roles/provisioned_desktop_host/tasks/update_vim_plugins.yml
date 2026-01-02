@@ -1,0 +1,3 @@
+- name: Announce to be not yet implemented
+  debug:
+    msg: Vim plugin update not yet implemented
