@@ -4,6 +4,9 @@
 # TODO ensure cdrom is commented out in /etc/apt/sources.list
 # NOTE in Debian 13 the cdrom row is already commented out after install
 
+- name: Import tasks for registering variables
+  ansible.builtin.import_tasks: register_variables.yml
+
 - name: Import tasks for installing essential packages
   ansible.builtin.import_tasks: install_essential_packages.yml
 
