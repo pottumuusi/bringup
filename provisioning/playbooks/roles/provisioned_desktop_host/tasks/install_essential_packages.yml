@@ -14,6 +14,7 @@
     purge: true
   become: true
 
+# Also installs git as a dependency.
 - name: Install etckeeper
   ansible.builtin.apt:
     pkg:
