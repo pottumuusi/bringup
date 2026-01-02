@@ -1,4 +1,35 @@
-- name: Announce to be not yet implemented
-  debug:
-    msg: Configuration deployment not yet implemented
+- name: Create config repository
+  ansible.builtin.git:
+    repo: git@github.com:pottumuusi/config.git
+    dest: "{{ directory_config_repo }}"
+    version: main
 
+- name: Deploy Tmux configuration
+  ansible.builtin.copy:
+    src: "{{ directory_config_repo }}/config/tmux/.tmux.conf"
+    dest: "{{ lookup('env','HOME') }}/.tmux.conf"
+    owner: tank
+    group: tank
+    mode: '0644'
+
+- name: Deploy Vim configuration
+  ansible.builtin.copy:
+    src: "{{ directory_config_repo }}/config/vim/.vimrc"
+    dest: "{{ lookup('env','HOME') }}/.vimrc"
+    owner: tank
+    group: tank
+    mode: '0644'
+
+- name: Deploy Bash directory color configuration
+  ansible.builtin.copy:
+    src: "{{ directory_config_repo }}/config/colors/.dir_colors"
+    dest: "{{ lookup('env','HOME') }}/.dir_colors"
+    owner: tank
+    group: tank
+    mode: '0644'
+
+- name: Set git configuration name
+  ansible.builtin.shell: git config --global user.name "Aleksi Backman"
+
+- name: Set git configuration email
+  ansible.builtin.shell: git config --global user.email "bddubbb@protonmail.com"

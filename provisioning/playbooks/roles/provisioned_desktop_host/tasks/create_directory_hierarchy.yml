@@ -3,3 +3,9 @@
     path: "{{ lookup('env','HOME') }}/my/repositories"
     state: directory
     mode: '0755'
+
+- name: Create a directory for GitHub repositories of pottumuusi
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') }}/my/repositories/github/pottumuusi"
+    state: directory
+    mode: '0755'
