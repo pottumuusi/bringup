@@ -1,8 +1,21 @@
+- name: Insert github.com key known hosts
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/ssh_known_hosts
+    line: "|1|9Bp2xK6nyoCITsSTi2hGKc0rFB0=|5eCBgXmif3zQKYWGvVC4EgtseXE= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
+    create: yes
+  become: true
+
+- name: Check config repo existence
+  ansible.builtin.stat:
+    path: "{{ directory_config_repo }}"
+  register: config_repo_stat
+
+# Do not use ansible.builtin.git because it avoids prompts by ensuring that
+# `BatchMode=yes`. The module is thus not compatible with password protected
+# SSH keys.
 - name: Create config repository
-  ansible.builtin.git:
-    repo: git@github.com:pottumuusi/config.git
-    dest: "{{ directory_config_repo }}"
-    version: main
+  ansible.builtin.shell: "GIT_SSH_COMMAND='ssh -i /home/tank/.ssh/id_ed25519' git clone git@github.com:pottumuusi/config.git {{ directory_config_repo }}"
+  when: config_repo_stat.stat.exists == false
 
 - name: Deploy Tmux configuration
   ansible.builtin.copy:
@@ -34,6 +47,7 @@
 - name: Set git configuration email
   ansible.builtin.shell: git config --global user.email "bddubbb@protonmail.com"
 
+# TODO apply directory colors using .bashrc
 - name: Customize .bashrc
   ansible.builtin.blockinfile:
     path: "{{ lookup('env','HOME') }}/.bashrc"
