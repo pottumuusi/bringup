@@ -1,3 +1,12 @@
+# https://protonvpn.com/support/official-linux-vpn-debian/
+# wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.8_all.deb
+# "Please don’t try  to check the GPG signature of this release package (dpkg-sig –verify). Our internal release process is split into several parts; the release package is signed with a GPG key, and the repo is signed with another GPG key. So the keys don’t match."
+# echo "0b14e71586b22e498eb20926c48c7b434b751149b1f2af9902ef1cfe6b03e180 protonvpn-stable-release_1.0.8_all.deb" | sha256sum --check -
+# sudo dpkg -i ./protonvpn-stable-release_1.0.8_all.deb && sudo apt update
+#
+# https://protonvpn.com/support/linux-cli
+# sudo apt install proton-vpn-cli
+
 - name: Announce to be not yet implemented
   debug:
     msg: proton-vpn-cli install not yet implemented

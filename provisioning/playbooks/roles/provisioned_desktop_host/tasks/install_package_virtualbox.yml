@@ -3,6 +3,8 @@
 # ```
 # sudo dpkg -i ./virtualbox-7.2_7.2.4-170995~Debian~trixie_amd64.deb
 # sudo apt install --fix-broken
+# sudo apt install linux-headers-6.12.57+deb13-amd64
+# sudo sudo /sbin/vboxconfig
 # ```
 
 - name: Insert backports apt source

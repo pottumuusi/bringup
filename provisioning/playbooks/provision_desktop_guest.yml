@@ -2,3 +2,11 @@
 # - virtualbox
 # - virtualbox-ext-pack
 # - virtualbox-guest-x11
+#
+# Guest pack can be installed using a pre-existing top menu entry for inserting guest additions CD image:
+# https://www.virtualbox.org/manual/ch04.html#additions-linux
+
+# TODO change to text boot mode
+# systemctl get-default
+# sudo systemctl set-default multi-user.target
+# sudo reboot

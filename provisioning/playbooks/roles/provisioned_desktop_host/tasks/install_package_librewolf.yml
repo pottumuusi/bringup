@@ -1,3 +1,7 @@
+# sudo apt update && sudo apt install extrepo -y
+# sudo extrepo enable librewolf
+# sudo apt update && sudo apt install librewolf -y
+
 - name: Announce to be not yet implemented
   debug:
     msg: Librewolf install not yet implemented
