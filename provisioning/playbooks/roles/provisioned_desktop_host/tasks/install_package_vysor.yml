@@ -1,0 +1,13 @@
+# Not using the APT repository, as it requires `trusted=yes` configuration.
+# > The value yes tells APT always to consider this source as trusted, even if it doesn't pass authentication checks. It disables parts of apt-secure(8), and should therefore only be used in a local and trusted context (if at all) as otherwise security is breached.
+# https://manpages.debian.org/trixie/apt/sources.list.5.en.html
+# Noting that the .deb in GitHub release is not signed. At least new files are
+# not being downloaded while trusting the source, when using the frozen GitHub
+# release. This frozen release would need to be compromized to possibly
+# compromize the downloading system.
+#
+# wget https://github.com/koush/vysor.io/releases/download/v5.0.7/Vysor-linux-5.0.7.deb
+
+- name: Announce to be not yet implemented
+  debug:
+    msg: Vysor install not yet implemented
