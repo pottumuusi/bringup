@@ -1,2 +1,2 @@
 # bringup
-Automating all kinds of installs
+Automating information technology installation
