@@ -1,0 +1,10 @@
+# 1. Insert contrib to primary apt source
+#   * This is already done in Steam package installation. Could add a duplicate
+#     task in this file as well.
+# 1. `sudo apt install vcmi 2>&1 | tee output_apt_install_vcmi.txt`
+# 1. Install Heroes III data files
+#   * `vcmibuilder --data /path/to/h3/data`
+
+- name: Announce to be not yet implemented
+  debug:
+    msg: VCMI install not yet implemented
