@@ -5,19 +5,19 @@ set -e
 main() {
 	local -r official_tar='official.tar'
 	local -r database_kdbx='Database.kdbx'
-	local -r share_http_directory="${HOME}/my/share_http"
+	local -r directory_share_http="${HOME}/my/share_http"
 
-	pushd "${share_http_directory}"
+	pushd "${directory_share_http}"
 
-	tar --directory=${HOME}/my -c -v -f ${share_http_directory}/${official_tar} ./official/
+	tar --directory=${HOME}/my -c -v -f ${directory_share_http}/${official_tar} ./official/
 	cp --verbose ${HOME}/my/data/for_programs/keepass/${database_kdbx} ./
 
 	ip -4 -brief address show
 	python3 -m http.server
-	rm --verbose ${database_kdbx}
-	rm --verbose ${official_tar}
+	rm --verbose ./${database_kdbx}
+	rm --verbose ./${official_tar}
 
-	popd # "${share_http_directory}"
+	popd # "${directory_share_http}"
 }
 
 main "${@}"

@@ -15,8 +15,8 @@ main() {
 
 	pushd /tmp
 
-	wget ${server_ip}:8000/${database_kdbx}
-	wget ${server_ip}:8000/${official_tar}
+	wget http://${server_ip}:8000/${database_kdbx}
+	wget http://${server_ip}:8000/${official_tar}
 
 	cp --verbose \
 		${HOME}/my/data/for_programs/keepass/${database_kdbx} \
@@ -26,7 +26,7 @@ main() {
 	rm --verbose --recursive --force ${HOME}/my/official/
 	tar --directory=${HOME}/my -x -v -f /tmp/${official_tar}
 
-	rm --verbose ${official_tar}
+	rm --verbose ./${official_tar}
 
 	popd # /tmp
 }
