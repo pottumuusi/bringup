@@ -21,12 +21,11 @@ main() {
 	cp --verbose \
 		${HOME}/my/data/for_programs/keepass/${database_kdbx} \
 		${HOME}/my/data/for_programs/keepass/${database_bak}
-	mv --verbose ./${database_kdbx} ./data/for_programs/keepass/
+	mv --verbose ./${database_kdbx} ${HOME}/my/data/for_programs/keepass/
 
 	rm --verbose --recursive --force ${HOME}/my/official/
-	tar --directory=${HOME}/my xvf /tmp/${official_tar}
+	tar --directory=${HOME}/my -x -v -f /tmp/${official_tar}
 
-	rm --verbose ${database_kdbx}
 	rm --verbose ${official_tar}
 
 	popd # /tmp
