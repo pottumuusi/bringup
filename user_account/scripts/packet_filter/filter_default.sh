@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 main() {
 	echo "Stopping docker service and socket"
 	sudo systemctl stop docker
@@ -8,7 +10,7 @@ main() {
 	echo "Loading nftables default config"
 	sudo nft -f /etc/nftables.conf
 
-	echo "Stopping docker service and socket"
+	echo "Starting docker service and socket"
 	sudo systemctl start docker
 	sudo systemctl start docker.socket
 }
